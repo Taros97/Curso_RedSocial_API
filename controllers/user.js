@@ -3,6 +3,7 @@
 const { json } = require('body-parser')
 var User = require('../models/user')
 var Follow = require('../models/follow')
+var Publication = require('../models/publication')
 var bcrypt = require('bcrypt-nodejs')
 var jwt = require('../services/jwt')
 var mongoosePaginate = require('mongoose-pagination')
@@ -233,9 +234,16 @@ async function getCountFollow(user_id){
         return err;
     });
 
+    var publications = await Publication.count({"user": user_id}).exec().then((count) => {
+        return count;
+    }).catch((err) => {
+        return err;
+    });
+
     return {
         following : following, 
-        followed: followed
+        followed: followed,
+        publications: publications
     }
 }
 
